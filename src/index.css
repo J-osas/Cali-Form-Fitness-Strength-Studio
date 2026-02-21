@@ -1,0 +1,59 @@
+@import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap');
+
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Space Grotesk", sans-serif;
+  
+  --color-brand-black: #08090A;
+  --color-brand-green: #04F06A;
+  --color-brand-offwhite: #F4F7F5;
+}
+
+@layer base {
+  html, body {
+    @apply max-w-[100vw] overflow-x-hidden;
+  }
+
+  body {
+    @apply bg-brand-black text-white font-sans antialiased;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-display;
+  }
+
+  /* Hide scrollbar for all browsers */
+  * {
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* IE and Edge */
+  }
+
+  *::-webkit-scrollbar {
+    display: none; /* Chrome, Safari, and Opera */
+  }
+}
+
+.glass {
+  @apply bg-white/5 backdrop-blur-md border border-white/10;
+}
+
+.btn-primary {
+  @apply bg-brand-green text-brand-black font-bold py-3 px-5 sm:px-8 rounded-xl transition-all hover:scale-105 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed whitespace-nowrap text-sm sm:text-base inline-flex items-center justify-center;
+}
+
+.btn-secondary {
+  @apply border-2 border-brand-green text-brand-green font-bold py-3 px-5 sm:px-8 rounded-xl transition-all hover:bg-brand-green hover:text-brand-black active:scale-95 whitespace-nowrap text-sm sm:text-base inline-flex items-center justify-center;
+}
+
+/* Background Video Coverage */
+.hero-bg iframe {
+  width: 100vw !important;
+  height: 56.25vw !important; /* 16:9 aspect ratio */
+  min-height: 100vh !important;
+  min-width: 177.77vh !important; /* 16:9 aspect ratio */
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
