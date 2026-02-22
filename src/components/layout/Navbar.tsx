@@ -136,7 +136,7 @@ export default function Navbar() {
                   <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-gray-400 group-hover:text-brand-green transition-colors">
                     Menu
                   </span>
-                  <div className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center group-hover:bg-white/10 transition-all">
+                  <div className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center group-hover:bg-white/10 transition-all shadow-[0_0_15px_rgba(4,240,106,0.15)] group-hover:shadow-[0_0_25px_rgba(4,240,106,0.35)] border border-brand-green/5 group-hover:border-brand-green/20">
                     <Menu size={24} strokeWidth={1.5} />
                   </div>
                 </motion.button>
