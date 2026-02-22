@@ -4,9 +4,10 @@ import Footer from './components/layout/Footer';
 import Home from './pages/Home';
 import Memberships from './pages/Memberships';
 import SmoothScroll from './components/layout/SmoothScroll';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { BOOKSY_URL } from '@/src/constants';
+import { AnimatePresence, motion } from 'motion/react';
 
 function ScrollToTop() {
   const { pathname, hash } = useLocation();
@@ -26,6 +27,18 @@ function ScrollToTop() {
 }
 
 export default function App() {
+  const [showSticky, setShowSticky] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      // Show after 100% of viewport height
+      setShowSticky(window.scrollY > window.innerHeight);
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
   return (
     <Router>
       <ScrollToTop />
@@ -41,16 +54,26 @@ export default function App() {
           <Footer />
           
           {/* Sticky Mobile CTA */}
-          <div className="md:hidden fixed bottom-6 left-6 right-6 z-40">
-            <a 
-              href={BOOKSY_URL} 
-              target="_blank" 
-              rel="noopener noreferrer"
-              className="btn-primary w-full shadow-2xl"
-            >
-              Book Membership
-            </a>
-          </div>
+          <AnimatePresence>
+            {showSticky && (
+              <motion.div 
+                initial={{ opacity: 0, y: 100 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: 100 }}
+                transition={{ type: 'spring', damping: 25, stiffness: 200 }}
+                className="md:hidden fixed bottom-6 left-6 right-6 z-40"
+              >
+                <a 
+                  href={BOOKSY_URL} 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="btn-primary w-full shadow-2xl"
+                >
+                  Book Membership
+                </a>
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
       </SmoothScroll>
     </Router>

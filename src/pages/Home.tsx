@@ -6,9 +6,6 @@ import { useRef } from 'react';
 import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import ReactPlayer from 'react-player';
-
-const Player = ReactPlayer as any;
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -39,7 +36,7 @@ export default function Home() {
     gsap.from('.reveal-card', {
       opacity: 0,
       y: 30,
-      stagger: 0.2,
+      stagger: 0.1,
       duration: 0.8,
       ease: 'power2.out',
       scrollTrigger: {
@@ -48,8 +45,24 @@ export default function Home() {
       }
     });
 
-    // Parallax effect for hero image
-    gsap.to('.hero-bg', {
+    // Membership cards reveal
+    gsap.fromTo('.membership-card', 
+      { opacity: 0, y: 30 },
+      {
+        opacity: 1,
+        y: 0,
+        stagger: 0.1,
+        duration: 0.8,
+        ease: 'power2.out',
+        scrollTrigger: {
+          trigger: '.membership-card',
+          start: 'top 85%',
+        }
+      }
+    );
+
+    // Parallax effect for hero video
+    gsap.to('.hero-video', {
       yPercent: 20,
       ease: 'none',
       scrollTrigger: {
@@ -65,31 +78,15 @@ export default function Home() {
     <div ref={container} className="overflow-x-hidden">
       {/* Hero Section */}
       <section className="relative min-h-screen flex items-center pt-20 px-6 overflow-hidden">
-        <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
-          <Player
-            url="https://www.youtube.com/watch?v=djp5ZQQ7WXA"
-            playing
-            loop
-            muted
-            playsinline
-            width="100%"
-            height="100%"
-            config={{
-              youtube: {
-                playerVars: {
-                  controls: 0,
-                  rel: 0,
-                  iv_load_policy: 3,
-                  disablekb: 1,
-                  fs: 0,
-                  playlist: 'djp5ZQQ7WXA'
-                }
-              }
-            }}
-            className="opacity-40 hero-bg scale-110"
+        <div className="absolute inset-0 z-0 pointer-events-none">
+          <img
+            src="https://images.unsplash.com/photo-1534438327276-14e5300c3a48?q=80&w=2070&auto=format&fit=crop"
+            alt="Gym Hero"
+            className="absolute inset-0 w-full h-full object-cover opacity-60 hero-video blur-[2px] scale-105"
+            referrerPolicy="no-referrer"
           />
-          <div className="absolute inset-0 bg-brand-black/40" />
-          <div className="absolute inset-0 bg-gradient-to-t from-brand-black via-brand-black/20 to-transparent" />
+          <div className="absolute inset-0 bg-brand-black/60" />
+          <div className="absolute inset-0 bg-gradient-to-t from-brand-black via-brand-black/40 to-transparent" />
         </div>
 
         <div className="max-w-7xl mx-auto w-full relative z-10">
@@ -102,7 +99,7 @@ export default function Home() {
             <span className="inline-block py-1 px-4 rounded-full bg-brand-green/10 text-brand-green font-bold text-xs tracking-widest uppercase mb-6 border border-brand-green/20">
               Gustine's Premier Strength Studio
             </span>
-            <h1 className="text-5xl md:text-7xl font-display font-bold text-white leading-[1.1] mb-8">
+            <h1 className="text-5xl md:text-7xl font-display font-extrabold text-white leading-[1.1] mb-8">
               Build Your <span className="text-brand-green">Strongest</span> Self.
             </h1>
             <p className="text-xl text-gray-300 mb-10 leading-relaxed">
@@ -199,6 +196,43 @@ export default function Home() {
                 </div>
               </div>
             ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Memberships Preview */}
+      <section id="memberships" className="py-24 px-6 bg-brand-offwhite text-brand-black">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-display font-bold mb-4">Membership Plans</h2>
+            <p className="text-gray-600 max-w-2xl mx-auto">Choose the plan that fits your goals. All memberships include 24/7 access and group classes.</p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {[
+              { title: "Single Member", price: "49", desc: "Standard month-to-month membership for individuals." },
+              { title: "Senior Member", price: "45", desc: "Month-to-month membership for members 60 years +." },
+              { title: "Student Member", price: "39", desc: "Month-to-month. Must show proof of high school ID or college ID/enrollment." },
+              { title: "Family / Referral", price: "35", desc: "Month-to-month. Mention current family or friend member at sign-up." }
+            ].map((plan, i) => (
+              <div key={i} className="membership-card bg-white p-8 rounded-3xl shadow-sm border border-gray-100 flex flex-col hover:shadow-xl transition-all duration-300">
+                <h3 className="text-xl font-bold mb-2">{plan.title}</h3>
+                <div className="flex items-baseline gap-1 mb-4">
+                  <span className="text-4xl font-display font-bold">${plan.price}</span>
+                  <span className="text-gray-500 text-sm">/mo</span>
+                </div>
+                <p className="text-gray-600 text-sm mb-8 flex-grow">{plan.desc}</p>
+                <a href={BOOKSY_URL} target="_blank" rel="noopener noreferrer" className="btn-primary w-full text-center py-2 text-sm">
+                  Book Membership
+                </a>
+              </div>
+            ))}
+          </div>
+          
+          <div className="mt-12 text-center">
+            <Link to="/memberships" className="text-brand-green font-bold flex items-center justify-center gap-2 hover:gap-3 transition-all">
+              View All Membership Options <ArrowRight size={20} />
+            </Link>
           </div>
         </div>
       </section>

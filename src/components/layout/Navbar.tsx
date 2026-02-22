@@ -86,49 +86,51 @@ export default function Navbar() {
   };
 
   return (
-    <nav ref={navRef} className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${scrolled ? 'bg-brand-black/90 backdrop-blur-md py-4 shadow-xl' : 'bg-transparent py-6'}`}>
-      <div className="max-w-7xl mx-auto px-6 flex justify-between items-center relative z-50">
-        <Link 
-          to="/" 
-          className="flex items-center gap-3 group logo-brand"
-          onMouseEnter={() => handleLogoHover(true)}
-          onMouseLeave={() => handleLogoHover(false)}
-          onClick={() => setIsOpen(false)}
-        >
-          <div className="w-12 h-12 relative">
-            <img src={LOGO_URL} alt="Cali Form Logo" className="w-full h-full object-contain" />
+    <>
+      <nav ref={navRef} className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${scrolled ? 'bg-brand-black/90 backdrop-blur-md py-4 shadow-xl' : 'bg-transparent py-6'}`}>
+        <div className="max-w-7xl mx-auto px-6 flex justify-between items-center relative z-50">
+          <Link 
+            to="/" 
+            className="flex items-center gap-3 group logo-brand"
+            onMouseEnter={() => handleLogoHover(true)}
+            onMouseLeave={() => handleLogoHover(false)}
+            onClick={() => setIsOpen(false)}
+          >
+            <div className="w-12 h-12 relative">
+              <img src={LOGO_URL} alt="Cali Form Logo" className="w-full h-full object-contain" />
+            </div>
+            <div className="flex flex-col leading-none">
+              <span className="text-white font-display font-bold text-lg tracking-tight">CALI FORM</span>
+              <span className="text-brand-green text-[10px] font-bold tracking-[0.2em]">FITNESS & STRENGTH</span>
+            </div>
+          </Link>
+
+          {/* Desktop Nav */}
+          <div className="hidden lg:flex items-center gap-8">
+            {navLinks.map((link) => (
+              <Link
+                key={link.name}
+                to={link.path}
+                className={`nav-item text-sm font-medium transition-colors hover:text-brand-green ${location.pathname === link.path ? 'text-brand-green' : 'text-gray-300'}`}
+              >
+                {link.name}
+              </Link>
+            ))}
+            <a href={BOOKSY_URL} target="_blank" rel="noopener noreferrer" className="btn-primary py-2.5 px-8 text-sm shadow-lg shadow-brand-green/20 hover:shadow-brand-green/40 transition-all">
+              Book Membership
+            </a>
           </div>
-          <div className="flex flex-col leading-none">
-            <span className="text-white font-display font-bold text-lg tracking-tight">CALI FORM</span>
-            <span className="text-brand-green text-[10px] font-bold tracking-[0.2em]">FITNESS & STRENGTH</span>
+
+          {/* Mobile Actions */}
+          <div className="flex lg:hidden items-center gap-4">
+            <button className="text-white z-[70] relative p-2" onClick={() => setIsOpen(!isOpen)}>
+              {isOpen ? <X size={32} /> : <Menu size={32} />}
+            </button>
           </div>
-        </Link>
-
-        {/* Desktop Nav */}
-        <div className="hidden lg:flex items-center gap-8">
-          {navLinks.map((link) => (
-            <Link
-              key={link.name}
-              to={link.path}
-              className={`nav-item text-sm font-medium transition-colors hover:text-brand-green ${location.pathname === link.path ? 'text-brand-green' : 'text-gray-300'}`}
-            >
-              {link.name}
-            </Link>
-          ))}
-          <a href={BOOKSY_URL} target="_blank" rel="noopener noreferrer" className="btn-primary py-2.5 px-8 text-sm shadow-lg shadow-brand-green/20 hover:shadow-brand-green/40 transition-all">
-            Book Membership
-          </a>
         </div>
+      </nav>
 
-        {/* Mobile Actions */}
-        <div className="flex lg:hidden items-center gap-4">
-          <button className="text-white z-50 relative p-2" onClick={() => setIsOpen(!isOpen)}>
-            {isOpen ? <X size={32} /> : <Menu size={32} />}
-          </button>
-        </div>
-      </div>
-
-      {/* Mobile Nav */}
+      {/* Mobile Nav Overlay - Moved outside nav to avoid stacking context issues */}
       <AnimatePresence>
         {isOpen && (
           <motion.div
@@ -136,9 +138,10 @@ export default function Navbar() {
             initial="closed"
             animate="open"
             exit="closed"
-            className="fixed inset-0 bg-brand-black/95 backdrop-blur-xl z-40 flex flex-col items-center justify-center lg:hidden"
+            data-lenis-prevent
+            className="fixed inset-0 bg-brand-black/98 backdrop-blur-2xl z-[60] flex flex-col items-center justify-center lg:hidden"
           >
-            <div className="flex flex-col items-center gap-8">
+            <div className="flex flex-col items-center gap-8 px-6 text-center">
               {navLinks.map((link) => (
                 <motion.div key={link.name} variants={itemVariants as any}>
                   <Link
@@ -155,7 +158,7 @@ export default function Navbar() {
                   href={BOOKSY_URL} 
                   target="_blank" 
                   rel="noopener noreferrer" 
-                  className="btn-primary text-xl px-12 py-4"
+                  className="btn-primary text-xl px-12 py-4 shadow-2xl shadow-brand-green/20"
                 >
                   Book Membership
                 </a>
@@ -164,6 +167,6 @@ export default function Navbar() {
           </motion.div>
         )}
       </AnimatePresence>
-    </nav>
+    </>
   );
 }

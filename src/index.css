@@ -47,13 +47,6 @@
 }
 
 /* Background Video Coverage */
-.hero-bg iframe {
-  width: 100vw !important;
-  height: 56.25vw !important; /* 16:9 aspect ratio */
-  min-height: 100vh !important;
-  min-width: 177.77vh !important; /* 16:9 aspect ratio */
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+.hero-video {
+  @apply pointer-events-none;
 }

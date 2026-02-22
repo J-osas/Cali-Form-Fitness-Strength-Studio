@@ -1,4 +1,4 @@
-import { motion } from 'motion/react';
+import { motion, AnimatePresence } from 'motion/react';
 import { Check, ArrowRight, Info, CreditCard, Users, ShieldCheck, Clock } from 'lucide-react';
 import { useState, useRef } from 'react';
 import { BOOKSY_URL } from '@/src/constants';
@@ -18,29 +18,36 @@ export default function Memberships() {
     sections.forEach((section: any) => {
       gsap.from(section, {
         opacity: 0,
-        y: 40,
-        duration: 1,
+        y: 20,
+        duration: 0.8,
         ease: 'power2.out',
         scrollTrigger: {
           trigger: section,
-          start: 'top 85%',
+          start: 'top 90%',
+          toggleActions: 'play none none none'
         }
       });
     });
 
     // Staggered reveal for membership cards
-    gsap.from('.membership-card', {
-      opacity: 0,
-      scale: 0.95,
-      y: 20,
-      stagger: 0.1,
-      duration: 0.8,
-      ease: 'back.out(1.7)',
-      scrollTrigger: {
-        trigger: '.membership-card',
-        start: 'top 85%',
+    gsap.fromTo('.membership-card', 
+      { opacity: 0, y: 30 },
+      {
+        opacity: 1,
+        y: 0,
+        stagger: 0.1,
+        duration: 0.8,
+        ease: 'power2.out',
+        scrollTrigger: {
+          trigger: '.membership-card',
+          start: 'top 95%',
+          toggleActions: 'play none none none',
+          once: true
+        }
       }
-    });
+    );
+
+    ScrollTrigger.refresh();
 
     // Floating animation for "Best Value" badge
     gsap.to('.value-badge', {
@@ -53,30 +60,31 @@ export default function Memberships() {
   }, { scope: container });
 
   const monthlyPlans = [
-    { title: "Single Member", price: "49", desc: "Standard month-to-month access for individuals." },
-    { title: "Senior (60+)", price: "45", desc: "Discounted rate for our experienced community members." },
-    { title: "Student", price: "39", desc: "Affordable access with valid school identification." },
-    { title: "Family / Referral", price: "35", desc: "Special rate when linked to an existing member." }
+    { title: "Single Member", price: "49", desc: "Standard month-to-month membership for individuals." },
+    { title: "Senior Member", price: "45", desc: "Month-to-month membership for members 60 years +." },
+    { title: "Student Member", price: "39", desc: "Month-to-month. Must show proof of high school ID or college ID/enrollment." },
+    { title: "Family / Referral", price: "35", desc: "Month-to-month. Mention current family or friend member at sign-up." }
   ];
 
   const shortTermPasses = [
-    { title: "1 Day Pass", price: "20" },
-    { title: "1 Week Pass", price: "30" },
-    { title: "2 Week Pass", price: "40" },
-    { title: "1 Month Pass", price: "55", sub: "Non-renewing" }
+    { title: "1 Day Pass", price: "20", sub: "Non-autorenew" },
+    { title: "1 Week Pass", price: "30", sub: "Non-autorenew" },
+    { title: "2 Week Pass", price: "40", sub: "Non-autorenew" },
+    { title: "1 Month Pass", price: "55", sub: "Non-autorenew" }
   ];
 
   const prepaidPlans = [
-    { months: "3 Months", discount: "5% OFF", desc: "Great for seasonal training." },
-    { months: "6 Months", discount: "10% OFF", desc: "Our most popular value option." },
-    { months: "12 Months", discount: "15% OFF", desc: "Maximum savings for dedicated athletes." }
+    { title: "Starter", months: "3 Months", discount: "5% OFF", desc: "24/7 Gym Membership. Total x 0.95" },
+    { title: "Contender", months: "6 Months", discount: "10% OFF", desc: "24/7 Gym Membership. Total x 0.90" },
+    { title: "Dedicated", months: "12 Months", discount: "15% OFF", desc: "24/7 Gym Membership. Total x 0.85" },
+    { title: "In To Win", months: "3 Months", discount: "20% OFF", desc: "Any Class Membership of your choice. Total x 0.80" }
   ];
 
   const faqs = [
-    { q: "Is there a setup fee?", a: "Yes, there is a one-time $40 setup fee for all new memberships." },
-    { q: "How do I get my key fob?", a: "Key fobs are issued during your initial membership appointment. There is a $10 fee at sign-up. Replacements are $25." },
-    { q: "Can minors join?", a: "Yes, but a parent or legal guardian must be present for the sign-up appointment and sign all waivers." },
-    { q: "Are classes included?", a: "Absolutely! All 24/7 memberships include access to our group fitness classes like Zumba and Senior Strength." }
+    { q: "Is there a setup fee?", a: "Each new and returning client will have a $40 set up fee in addition to the initial $10 Key Fob charge at sign-up. Note: Pre-Paid memberships do NOT require a setup fee." },
+    { q: "How do I get my key fob?", a: "Key fobs are issued at sign-up for a $10 initial charge. Additional key fob replacement due to being lost, stolen, or misplaced is $25. Please notify us via text, call, or email for prompt replacement." },
+    { q: "Can minors join?", a: "ATTENTION All Minors: A parent or legal guardian must be present with you at your appointment to sign all necessary waivers." },
+    { q: "Are classes included?", a: "Yes! Zumba and Senior Strength Training classes are included at no additional charge with any 24/7 Gym membership option." }
   ];
 
   return (
@@ -166,12 +174,15 @@ export default function Memberships() {
                 <h2 className="text-4xl font-display font-bold mb-4">Pre-Paid Memberships</h2>
                 <p className="text-gray-400">Commit to your strength and save up to 15% on your membership.</p>
               </div>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
                 {prepaidPlans.map((plan, i) => (
-                  <div key={i} className="border border-white/10 p-8 rounded-3xl hover:border-brand-green/50 transition-colors group">
-                    <h3 className="text-2xl font-display font-bold mb-2">{plan.months}</h3>
+                  <div key={i} className="border border-white/10 p-8 rounded-3xl hover:border-brand-green/50 transition-colors group flex flex-col">
+                    <div className="mb-4">
+                      <h3 className="text-xl font-display font-bold text-brand-green">{plan.title}</h3>
+                      <p className="text-2xl font-display font-bold text-white">{plan.months}</p>
+                    </div>
                     <p className="text-4xl font-display font-bold text-brand-green mb-4">{plan.discount}</p>
-                    <p className="text-gray-400 text-sm mb-8">{plan.desc}</p>
+                    <p className="text-gray-400 text-sm mb-8 flex-grow">{plan.desc}</p>
                     <a href={BOOKSY_URL} target="_blank" rel="noopener noreferrer" className="btn-secondary w-full text-center block">
                       Book Membership
                     </a>
@@ -191,9 +202,9 @@ export default function Memberships() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
             {[
               { icon: <Clock className="text-brand-green" />, title: "24/7 Access", desc: "Train whenever inspiration strikes. Day or night, we're open." },
-              { icon: <Users className="text-brand-green" />, title: "Group Classes", desc: "Zumba and Senior Strength Training included in your membership." },
-              { icon: <ShieldCheck className="text-brand-green" />, title: "Secure Facility", desc: "Advanced surveillance and secure key fob access for your safety." },
-              { icon: <CreditCard className="text-brand-green" />, title: "No Contracts", desc: "We believe in our gym. No long-term commitments required." }
+              { icon: <Users className="text-brand-green" />, title: "Zumba Classes", desc: "M-F 8:30am-9:30am & Tue/Thu 6:30pm-7:30pm. Included with membership." },
+              { icon: <ShieldCheck className="text-brand-green" />, title: "Senior Strength", desc: "M/W/F 9:15am-10am. Specialized training included at no extra charge." },
+              { icon: <CreditCard className="text-brand-green" />, title: "No Contracts", desc: "We believe in our gym. Month-to-month options with no long-term commitment." }
             ].map((b, i) => (
               <div key={i} className="text-center">
                 <div className="w-16 h-16 bg-white/5 rounded-2xl flex items-center justify-center mx-auto mb-6">
@@ -223,19 +234,34 @@ export default function Memberships() {
                     <ArrowRight size={20} className="text-brand-green" />
                   </motion.div>
                 </button>
-                {openFaq === i && (
-                  <div className="px-6 pb-6 text-gray-600 text-sm leading-relaxed">
-                    {faq.a}
-                  </div>
-                )}
+                <AnimatePresence>
+                  {openFaq === i && (
+                    <motion.div
+                      initial={{ height: 0, opacity: 0 }}
+                      animate={{ height: 'auto', opacity: 1 }}
+                      exit={{ height: 0, opacity: 0 }}
+                      transition={{ duration: 0.3, ease: 'easeInOut' }}
+                      className="overflow-hidden"
+                    >
+                      <div className="px-6 pb-6 text-gray-600 text-sm leading-relaxed">
+                        {faq.a}
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
               </div>
             ))}
           </div>
-          <div className="mt-12 p-6 bg-brand-green/10 rounded-2xl border border-brand-green/20 flex gap-4">
-            <Info className="text-brand-green shrink-0" />
-            <p className="text-xs text-gray-700 leading-relaxed">
-              <strong>Policies:</strong> A one-time $40 setup fee and $10 key fob fee apply to all new memberships. Replacement fobs are $25. Minors require parent/guardian presence at sign-up.
-            </p>
+          <div className="mt-12 p-6 bg-brand-green/10 rounded-2xl border border-brand-green/20 flex flex-col md:flex-row gap-6 items-center md:items-start">
+            <Info className="text-brand-green shrink-0" size={32} />
+            <div className="space-y-4 text-sm text-gray-700 leading-relaxed">
+              <p>
+                <strong>Fees:</strong> A one-time $40 setup fee and $10 key fob fee apply to all new/returning memberships. Pre-paid plans have NO setup fee (only $10 fob fee if needed). Replacement fobs are $25.
+              </p>
+              <p>
+                <strong>Contact:</strong> Call or text us at <strong>(209) 854-2155</strong> for more information or prompt fob replacement.
+              </p>
+            </div>
           </div>
         </div>
       </section>
