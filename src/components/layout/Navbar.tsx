@@ -123,9 +123,25 @@ export default function Navbar() {
 
           {/* Mobile Actions */}
           <div className="flex lg:hidden items-center gap-4">
-            <button className="text-white z-[70] relative p-2" onClick={() => setIsOpen(!isOpen)}>
-              {isOpen ? <X size={32} /> : <Menu size={32} />}
-            </button>
+            <AnimatePresence>
+              {!isOpen && (
+                <motion.button 
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.9 }}
+                  className="flex items-center gap-2 text-white z-[70] relative p-2 group" 
+                  onClick={() => setIsOpen(true)}
+                  aria-label="Open Menu"
+                >
+                  <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-gray-400 group-hover:text-brand-green transition-colors">
+                    Menu
+                  </span>
+                  <div className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center group-hover:bg-white/10 transition-all">
+                    <Menu size={24} strokeWidth={1.5} />
+                  </div>
+                </motion.button>
+              )}
+            </AnimatePresence>
           </div>
         </div>
       </nav>
@@ -141,6 +157,16 @@ export default function Navbar() {
             data-lenis-prevent
             className="fixed inset-0 bg-brand-black/98 backdrop-blur-2xl z-[60] flex flex-col items-center justify-center lg:hidden"
           >
+            {/* Dedicated Close Button inside menu */}
+            <div className="absolute top-8 right-8">
+              <button 
+                onClick={() => setIsOpen(false)}
+                className="w-12 h-12 rounded-full bg-white/5 flex items-center justify-center text-white hover:bg-brand-green hover:text-brand-black transition-all"
+              >
+                <X size={28} strokeWidth={1.5} />
+              </button>
+            </div>
+
             <div className="flex flex-col items-center gap-8 px-6 text-center">
               {navLinks.map((link) => (
                 <motion.div key={link.name} variants={itemVariants as any}>
